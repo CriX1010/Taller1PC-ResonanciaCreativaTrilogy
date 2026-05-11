@@ -1,29 +1,18 @@
-# -*- coding: utf-8 -*-
+from src.loader import cargar_nombres, cargar_categorias, cargar_grafo_filtrado
 
-archivos = [
-    "Data/wiki-topcats.mtx",
-    "Data/wiki-topcats_pagenames.txt",
-    "Data/wiki-topcats_Categories.mtx",
-    "Data/wiki-topcats_Category_names.txt"
-]
+DATA = "data/"
 
-for nombre in archivos:
-    print(f"\n{'='*50}")
-    print(f"ARCHIVO: {nombre}")
-    print('='*50)
-    with open(nombre, "r", encoding="utf-8", errors="ignore") as f:
-        for i, linea in enumerate(f):
-            print(f"  {i}: {linea.strip()}")
-            if i >= 12:
-                break
-            
-print("-"*20)
-# Ver las primeras líneas DESPUÉS del header del .mtx principal
-with open("Data/wiki-topcats.mtx", "r", encoding="utf-8", errors="ignore") as f:
-    for i, linea in enumerate(f):
-        if not linea.startswith("%"):
-            print(f"Línea de dimensiones: {linea.strip()}")
-            # Leer las siguientes 5 para ver el formato de aristas
-            for j in range(5):
-                print(f"  arista ejemplo: {next(f).strip()}")
-            break
+print("Cargando nombres...")
+nombres = cargar_nombres(DATA + "wiki-topcats_pagenames.txt")
+
+print("Cargando categorías...")
+categorias = cargar_categorias(
+    DATA + "wiki-topcats_Categories.mtx",
+    DATA + "wiki-topcats_Category_names.txt"
+)
+
+# Ver las 10 categorías más grandes
+top10 = sorted(categorias.items(), key=lambda x: len(x[1]), reverse=True)[:10]
+print("\nTop 10 categorías más grandes:")
+for i, (nombre, ids) in enumerate(top10, 1):
+    print(f"  {i:2}. {nombre:<45} ({len(ids):,} artículos)")

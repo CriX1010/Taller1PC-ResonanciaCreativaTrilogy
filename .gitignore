@@ -1,2 +1,4 @@
 Data/
 .gitattributes
+__pycache__/
+*.pyc
