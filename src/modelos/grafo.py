@@ -171,3 +171,9 @@ class GrafoWikipedia:
             puntajes = nuevos_puntajes
 
         return puntajes
+
+    def obtener_nombre(self, id_articulo):
+        articulo = self.articulos.get(id_articulo)
+        if articulo:
+            return articulo.nombre
+        return f"ID {id_articulo} (desconocido)"

@@ -47,6 +47,7 @@ class ReporteBasicoWikipedia:
                 valor = articulo.grado_salida()
 
             top.append({
+                "id": articulo.id_articulo,
                 "nombre": articulo.nombre,
                 "valor": valor,
             })
@@ -86,4 +87,4 @@ class ReporteBasicoWikipedia:
         print("-" * len(titulo))
 
         for posicion, item in enumerate(items, start=1):
-            print(f"{posicion}. {item['nombre']} -> {item['valor']}")
+            print(f"{posicion}. [ID {item['id']}] {item['nombre']} -> {item['valor']}")
