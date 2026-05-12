@@ -1,4 +1,7 @@
-Data/
-.gitattributes
 __pycache__/
 *.pyc
+results/*.txt
+results/*.csv
+dataset/*.mtx
+dataset/*.txt
+!dataset/README.md
