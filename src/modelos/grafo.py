@@ -10,33 +10,31 @@ class GrafoWikipedia:
         self.articulos = {}
 
     def agregar_articulo(self, id_articulo, nombre):
-        pass
-        # TODO
+        if id_articulo not in self.articulos:
+            self.articulos[id_articulo] = ArticuloWikipedia(id_articulo, nombre)
 
     def obtener_articulo(self, id_articulo):
-        pass
-        # TODO
+        return self.articulos.get(id_articulo, None)
 
     def agregar_enlace(self, id_origen, id_destino):
-        pass
-        # TODO
+        if id_origen in self.articulos and id_destino in self.articulos:
+            self.articulos[id_origen].agregar_enlace_salida(id_destino)
+            self.articulos[id_destino].agregar_enlace_entrada(id_origen)
 
     def cantidad_articulos(self):
-        pass        
-        # TODO
+        return len(self.articulos)
 
     def cantidad_enlaces(self):
-        pass
-        # TODO
+        return sum(a.grado_salida() for a in self.articulos.values())
 
     def top_por_grado_entrada(self, cantidad=10):
         lista = list(self.articulos.values())
-        #TODO
+        lista.sort(key=lambda a: a.grado_entrada(), reverse=True)
         return lista[:cantidad]
 
     def top_por_grado_salida(self, cantidad=10):
         lista = list(self.articulos.values())
-        #TODO
+        lista.sort(key=lambda a: a.grado_salida(), reverse=True)
         return lista[:cantidad]
 
     def resumen(self):
@@ -168,7 +166,7 @@ class GrafoWikipedia:
                 aporte = puntajes[id_articulo] / articulo.grado_salida()
 
                 for vecino in articulo.enlaces_salida:
-                    #TODO, COMPLETAR LA LINEA FALTANTE
+                    nuevos_puntajes[vecino] = nuevos_puntajes.get(vecino, 0) + damping * aporte
 
             puntajes = nuevos_puntajes
 

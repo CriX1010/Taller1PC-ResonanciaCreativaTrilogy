@@ -50,9 +50,40 @@ class CargadorWikipedia:
                     columna = int(partes[1])
                     yield fila, columna
 
-    def cargar_grafo(self):
+    def cargar_grafo(self, categoria_filtro: str = "English-language_films"):
         grafo = GrafoWikipedia()
 
-        #TODO
+        print("Cargando nombres de artículos...")
+        nombres = self.cargar_nombres_articulos()
 
+        print("Cargando nombres de categorías...")
+        nombres_cat = self.cargar_nombres_categorias()
+
+        print("Cargando categorías y filtrando...")
+        ruta_cat = self.ruta_dataset / "wiki-topcats_Categories.mtx"
+        ids_filtro = set()
+        cat_por_articulo = {}  # id_articulo -> nombre_categoria
+
+        for id_articulo, id_categoria in self._leer_matriz_market(ruta_cat):
+            nombre_cat = nombres_cat.get(id_categoria, f"cat_{id_categoria}")
+            if nombre_cat == categoria_filtro:
+                ids_filtro.add(id_articulo)
+                cat_por_articulo[id_articulo] = nombre_cat
+
+        print(f"  Artículos en '{categoria_filtro}': {len(ids_filtro)}")
+
+        # Agregar nodos al grafo
+        for id_nodo in ids_filtro:
+            nombre = nombres.get(id_nodo, f"articulo_{id_nodo}")
+            grafo.agregar_articulo(id_nodo, nombre)
+            grafo.articulos[id_nodo].agregar_categoria(categoria_filtro)
+
+        # Cargar aristas solo entre nodos del filtro
+        print("Cargando aristas...")
+        ruta_aristas = self.ruta_dataset / "wiki-topcats.mtx"
+        for id_origen, id_destino in self._leer_matriz_market(ruta_aristas):
+            if id_origen in ids_filtro and id_destino in ids_filtro:
+                grafo.agregar_enlace(id_origen, id_destino)
+
+        print(f"  Aristas cargadas: {grafo.cantidad_enlaces()}")
         return grafo
