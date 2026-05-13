@@ -44,15 +44,7 @@ class GrafoWikipedia:
         }
 
     def bfs(self, id_inicio):
-        """
-        TODO:
-        Implementar recorrido BFS.
-
-        Sugerencia:
-        - usar una cola (`deque`);
-        - marcar visitados;
-        - retornar el orden de visita.
-        """
+        """Recorre el grafo completo desde id_inicio usando anchura. Retorna el orden de visita."""
         if id_inicio not in self.articulos:
             return []
 
@@ -72,10 +64,7 @@ class GrafoWikipedia:
         return recorrido
 
     def dfs(self, id_inicio):
-        """
-        TODO:
-        Completar o reescribir este método usando una pila o recursión.
-        """
+        """Recorre el grafo completo desde id_inicio usando profundidad. Retorna el orden de visita."""
         if id_inicio not in self.articulos:
             return []
 
@@ -102,11 +91,7 @@ class GrafoWikipedia:
         return recorrido
 
     def encontrar_camino_simple(self, id_origen, id_destino):
-        """
-        TODO:
-        Mejorar esta búsqueda para encontrar caminos más interesantes.
-        Por ahora retorna un camino simple usando BFS.
-        """
+        """Encuentra el camino más corto entre dos artículos usando BFS. Retorna lista de IDs."""
         if id_origen not in self.articulos or id_destino not in self.articulos:
             return []
 

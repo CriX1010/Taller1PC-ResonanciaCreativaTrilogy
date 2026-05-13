@@ -1,6 +1,6 @@
 from loaders.cargador_wikipedia import CargadorWikipedia
 from utilidades.reporte_basico import ReporteBasicoWikipedia
-
+import random
 
 def mostrar_camino(grafo, camino):
     if not camino:
@@ -11,11 +11,10 @@ def mostrar_camino(grafo, camino):
     print(" -> ".join(nombres))
 
 def mostrar_articulos_disponibles(grafo):
-    print("\nAlgunos artículos disponibles en el grafo:")
-    print("-" * 45)
-    for i, articulo in enumerate(grafo.articulos.values()):
-        if i >= 10:
-            break
+    print("\nAlgunos artículos disponibles en el grafo (selección aleatoria):")
+    print("-" * 50)
+    muestra = random.sample(list(grafo.articulos.values()), min(10, len(grafo.articulos)))
+    for articulo in muestra:
         print(f"[ID {articulo.id_articulo}] {articulo.nombre}")
     print()
 
@@ -57,10 +56,6 @@ def menu_busqueda(grafo):
         print("\n-- BFS (camino más corto) --")
         camino_bfs = grafo.encontrar_camino_simple(id_origen, id_destino)
         mostrar_camino(grafo, camino_bfs)
-
-        print("\n-- DFS (camino por profundidad) --")
-        camino_dfs = grafo.encontrar_camino_dfs(id_origen, id_destino)
-        mostrar_camino(grafo, camino_dfs)
 
         print()
 
