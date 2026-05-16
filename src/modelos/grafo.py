@@ -122,13 +122,11 @@ class GrafoWikipedia:
         camino.reverse()
         return camino
 
-    def pagerank(self, iteraciones=20, damping=0.85):
-        """
-        TODO:
-        Este método puede servir como base para la versión final.
-        Puede validarlo, modificarlo o reimplementarlo.
-        """
+    def pagerank(self, iteraciones=20):
+        """Calcula la relevancia de cada artículo usando el algoritmo Pagerank
+        iterativo. Retorna un diccionario id_articulo -> puntaje."""
         cantidad_nodos = self.cantidad_articulos()
+        damping=0.85
         if cantidad_nodos == 0:
             return {}
 

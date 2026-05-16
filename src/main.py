@@ -11,7 +11,7 @@ def mostrar_camino(grafo, camino):
     print(" -> ".join(nombres))
 
 def mostrar_articulos_disponibles(grafo):
-    print("\nAlgunos artículos disponibles en el grafo (selección aleatoria):")
+    print("\nAlgunos artículos disponibles en el grafo (aleatorios):")
     print("-" * 50)
     muestra = random.sample(list(grafo.articulos.values()), min(10, len(grafo.articulos)))
     for articulo in muestra:
@@ -21,7 +21,7 @@ def mostrar_articulos_disponibles(grafo):
 def menu_busqueda(grafo):
     print("\n=== Buscador de conexiones entre artículos ===")
     print("Ingresa los IDs de dos artículos para encontrar su camino.")
-    print("Escribe 'ver' para ver artículos disponibles.")
+    print("Escribe 'ver' para ver  algunos artículos disponibles.")
     print("Escribe 'salir' para volver al menú principal.\n")
 
     while True:
@@ -53,7 +53,7 @@ def menu_busqueda(grafo):
             print(f"El ID {id_destino} no existe en el grafo.\n")
             continue
 
-        print("\n-- BFS (camino más corto) --")
+        print("\n-- BFS --")
         camino_bfs = grafo.encontrar_camino_simple(id_origen, id_destino)
         mostrar_camino(grafo, camino_bfs)
 
@@ -74,7 +74,7 @@ def menu_pagerank(grafo, carpeta_resultados):
         nombre = grafo.obtener_nombre(id_art)
         print(f"{posicion}. {nombre} -> {puntaje:.6f}")
 
-    # Exportar ranking completo a archivo
+    # Exportar ranking completo al archivo
     ruta_archivo = carpeta_resultados / "reporte_pagerank.txt"
     lineas = ["Ranking PageRank de artículos Wikipedia", ""]
     for posicion, (id_art, puntaje) in enumerate(ranking, start=1):
@@ -84,13 +84,67 @@ def menu_pagerank(grafo, carpeta_resultados):
     ruta_archivo.write_text("\n".join(lineas) + "\n", encoding="utf-8")
     print(f"\nRanking completo exportado a: {ruta_archivo}")
 
+def menu_recorrido(grafo, carpeta_resultados):
+    print("\n=== Recorrido BFS y DFS ===")
+
+    # Tomar el artículo con más enlaces de entrada como punto de inicio
+    articulo_inicio = grafo.top_por_grado_entrada(1)[0]
+    id_inicio = articulo_inicio.id_articulo
+    nombre_inicio = articulo_inicio.nombre
+
+    print(f"Artículo de inicio: [{id_inicio}] {nombre_inicio}")
+    print(f"Grado de entrada: {articulo_inicio.grado_entrada()}")
+    print()
+
+    print("Ejecutando BFS...")
+    recorrido_bfs = grafo.bfs(id_inicio)
+    print(f"  Artículos alcanzados: {len(recorrido_bfs)}")
+
+    print("Ejecutando DFS...")
+    recorrido_dfs = grafo.dfs(id_inicio)
+    print(f"  Artículos alcanzados: {len(recorrido_dfs)}")
+
+    print()
+    print("Primeros 10 en orden BFS (anchura, nivel por nivel):")
+    for i, id_art in enumerate(recorrido_bfs[:10], start=1):
+        print(f"  {i}. [{id_art}] {grafo.obtener_nombre(id_art)}")
+
+    print()
+    print("Primeros 10 en orden DFS (profundidad, sigue un camino hasta el fondo):")
+    for i, id_art in enumerate(recorrido_dfs[:10], start=1):
+        print(f"  {i}. [{id_art}] {grafo.obtener_nombre(id_art)}")
+
+    # Exportar a archivo
+    ruta_archivo = carpeta_resultados / "reporte_recorridos.txt"
+    lineas = [
+        "Recorrido BFS y DFS",
+        f"Artículo de inicio: [{id_inicio}] {nombre_inicio}",
+        "",
+        f"Total alcanzados BFS: {len(recorrido_bfs)}",
+        f"Total alcanzados DFS: {len(recorrido_dfs)}",
+        "",
+        "Primeros 20 en BFS:",
+    ]
+    for i, id_art in enumerate(recorrido_bfs[:20], start=1):
+        lineas.append(f"  {i}. [{id_art}] {grafo.obtener_nombre(id_art)}")
+
+    lineas.append("")
+    lineas.append("Primeros 20 en DFS:")
+    for i, id_art in enumerate(recorrido_dfs[:20], start=1):
+        lineas.append(f"  {i}. [{id_art}] {grafo.obtener_nombre(id_art)}")
+
+    ruta_archivo.write_text("\n".join(lineas) + "\n", encoding="utf-8")
+    print(f"\nReporte exportado a: {ruta_archivo}")
+
+
 
 def menu_principal(grafo, carpeta_resultados):
     while True:
         print("\n=== Menú principal ===")
-        print("1. Buscar camino entre artículos (BFS / DFS)")
+        print("1. Buscar camino entre artículos (BFS)")
         print("2. Calcular y ver PageRank")
-        print("3. Salir")
+        print("3. Ver recorrido BFS y DFS")
+        print("4. Salir")
 
         opcion = input("\nElige una opción: ").strip()
 
@@ -99,6 +153,8 @@ def menu_principal(grafo, carpeta_resultados):
         elif opcion == "2":
             menu_pagerank(grafo, carpeta_resultados)
         elif opcion == "3":
+            menu_recorrido(grafo, carpeta_resultados)
+        elif opcion == "4":
             print("Hasta luego.")
             break
         else:

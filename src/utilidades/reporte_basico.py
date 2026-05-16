@@ -75,7 +75,7 @@ class ReporteBasicoWikipedia:
 
         if top_salida:
             for indice, item in enumerate(top_salida, start=1):
-                lineas.append(f"{indice}. {item['nombre']} -> {item['valor']}")
+                lineas.append(f"{indice}. [ID {item['id']}] {item['nombre']} -> {item['valor']}")
         else:
             lineas.append("Sin datos.")
 

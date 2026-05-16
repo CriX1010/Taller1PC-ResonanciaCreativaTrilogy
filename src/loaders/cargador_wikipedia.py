@@ -62,13 +62,12 @@ class CargadorWikipedia:
         print("Cargando categorías y filtrando...")
         ruta_cat = self.ruta_dataset / "wiki-topcats_Categories.mtx"
         ids_filtro = set()
-        cat_por_articulo = {}  # id_articulo -> nombre_categoria
+        cat_por_articulo = {}
 
         for id_articulo, id_categoria in self._leer_matriz_market(ruta_cat):
             nombre_cat = nombres_cat.get(id_categoria, f"cat_{id_categoria}")
             if nombre_cat == categoria_filtro:
                 ids_filtro.add(id_articulo)
-                cat_por_articulo[id_articulo] = nombre_cat
 
         print(f"  Artículos en '{categoria_filtro}': {len(ids_filtro)}")
 
